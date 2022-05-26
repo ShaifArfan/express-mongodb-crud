@@ -1,59 +1,21 @@
 import express from "express";
-import User from "../models/User.js";
+import { createUser, deleteUser, getAllUsers, getUser, updatedUser } from "../controllers/user.js";
 
 const router = express.Router();
 
 // create a user
-router.post("/", async (req, res) => {
-  const newUser = new User(req.body);
-  try{
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
-  }catch(err){
-    res.json({error: err});
-  };
-});
+router.post("/", createUser);
 
 // get all user
-router.get("/", async (req, res) => {
-  try{
-    const users = await User.find({});
-    res.status(200).json(users);
-  }catch(err){
-    res.json({ error: err });
-  }
-});
+router.get("/", getAllUsers);
 
 // get a user by id
-router.get("/:userId", async (req, res) => {
-  try{
-    const user = await User.findById(req.params.userId);
-    res.status(200).json(user);
-  }catch(err){
-    res.json({ error: err });
-  }
-});
+router.get("/:userId", getUser);
 
 // update a user by id
-router.patch("/:userId", async (req, res) => {
-  try{
-    const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, {
-      new: true
-    });
-    res.status(200).json(updatedUser);
-  }catch(err){
-    res.json({ error: err });
-  }
-});
+router.patch("/:userId", updatedUser);
 
 // delete a user by id
-router.delete("/:userId", async (req, res) => {
-  try{
-    const deletedUser = await User.findByIdAndDelete(req.params.userId);
-    res.status(200).json(deletedUser);
-  }catch(err){
-    res.json({ error: err });
-  }
-});
+router.delete("/:userId", deleteUser);
 
 export default router;
