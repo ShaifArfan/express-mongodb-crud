@@ -8,7 +8,7 @@ export const createUser =  async (req, res) => {
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
   }catch(err){
-    res.json({error: err});
+    next(err);
   };
 };
 
@@ -18,7 +18,7 @@ export const getAllUsers =  async (req, res) => {
     const users = await User.find({});
     res.status(200).json(users);
   }catch(err){
-    res.json({ error: err });
+    next(err);
   }
 };
 
@@ -28,7 +28,7 @@ export const getUser =  async (req, res) => {
     const user = await User.findById(req.params.userId);
     res.status(200).json(user);
   }catch(err){
-    res.json({ error: err });
+    next(err);
   }
 };
 
@@ -40,7 +40,7 @@ export const updatedUser =  async (req, res) => {
     });
     res.status(200).json(updatedUser);
   }catch(err){
-    res.json({ error: err });
+    next(err);
   }
 };
 
@@ -50,6 +50,6 @@ export const deleteUser = async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(req.params.userId);
     res.status(200).json(deletedUser);
   }catch(err){
-    res.json({ error: err });
+    next(err);
   }
 };
