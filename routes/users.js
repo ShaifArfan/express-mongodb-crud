@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, deleteUser, getAllUsers, getUser, updatedUser } from "../controllers/user.js";
+import { createUser, deleteUser, getAllUsers, getOwnProfile, getUser, updatedUser } from "../controllers/user.js";
 import { checkAuth } from "../utils/checkAuth.js";
 
 const router = express.Router();
@@ -10,6 +10,9 @@ const router = express.Router();
 
 // get all user
 router.get("/", checkAuth, getAllUsers);
+
+// get own profile
+router.get("/me", checkAuth, getOwnProfile);
 
 // get a user by id
 router.get("/:userId", checkAuth, getUser);

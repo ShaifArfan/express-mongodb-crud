@@ -1,8 +1,9 @@
 import User from "../models/User.js";
+import { createError } from "../utils/errors.js";
 
 
 // create a user
-export const createUser =  async (req, res) => {
+export const createUser =  async (req, res, next) => {
   const newUser = new User(req.body);
   try{
     const savedUser = await newUser.save();
@@ -13,7 +14,7 @@ export const createUser =  async (req, res) => {
 };
 
 // get all user
-export const getAllUsers =  async (req, res) => {
+export const getAllUsers =  async (req, res, next) => {
   try{
     const users = await User.find({});
     res.status(200).json(users);
@@ -22,8 +23,18 @@ export const getAllUsers =  async (req, res) => {
   }
 };
 
+// get own profile
+export const getOwnProfile =  async (req, res, next) => {
+  try{
+    const user = await User.findById(req.user.id );
+    res.status(200).json(user);
+  }catch(err){
+    next(err);
+  }
+};
+
 // get a user by id
-export const getUser =  async (req, res) => {
+export const getUser =  async (req, res, next) => {
   try{
     const user = await User.findById(req.params.userId);
     res.status(200).json(user);
@@ -33,8 +44,11 @@ export const getUser =  async (req, res) => {
 };
 
 // update a user by id
-export const updatedUser =  async (req, res) => {
+export const updatedUser =  async (req, res, next) => {
   try{
+    if(req.params.userId !== req.user.id){
+      return next(createError({message: 'You are not authorized to update this user', status: 403}));
+    }
     const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, {
       new: true
     });
@@ -45,7 +59,7 @@ export const updatedUser =  async (req, res) => {
 };
 
 // delete a user by id
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   try{
     const deletedUser = await User.findByIdAndDelete(req.params.userId);
     res.status(200).json(deletedUser);
