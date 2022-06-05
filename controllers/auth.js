@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { createError } from '../utils/errors.js';
+import { getUserData } from '../utils/getUserData.js';
 
 export const login = async (req, res, next) => {
   try{
@@ -17,6 +18,8 @@ export const login = async (req, res, next) => {
       return next(createError({status: 400, message: "Wrong Password"}));
     }
 
+    const userData = getUserData(user);
+
     const payload = {
       id: user._id,
     }
@@ -25,7 +28,7 @@ export const login = async (req, res, next) => {
     
     res.cookie('access_token', token, {
       httpOnly: true
-    }).status(200).json(user);
+    }).status(200).json(userData);
 
   }catch(err) {
     next(err);
