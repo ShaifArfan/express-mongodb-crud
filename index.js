@@ -28,8 +28,6 @@ app.use((err, req, res, next) => {
   })
 }) 
 
-
-
 // connect to the database
 const connectDB = async () => {
   try{
